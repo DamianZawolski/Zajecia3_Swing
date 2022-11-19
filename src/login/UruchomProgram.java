@@ -1,129 +1,159 @@
-
 package login;
 
+/*Java Program to switch between frames using buttons*/
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import static java.util.Map.entry;
-
-class MainWindow extends JFrame {
-    private HashMap<String, String> users = new HashMap<>(Map.ofEntries(
+class login implements ActionListener
+{
+    private static HashMap<String, String> users = new HashMap<>(Map.ofEntries(
             entry("admin", "admin"),
             entry("user", "12345"),
             entry("12345", "12345")));
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                MainWindow frame = new MainWindow();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace(System.err);
-            }
-        });
-    }
-
-    final Color defaultColor = new Color(220, 220, 220);
-
-    public MainWindow() throws HeadlessException {
-        super("Logowanie");
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
-        setSize(400, 300);
-        JPanel contentPane = new JPanel();
-
-        contentPane.setBorder(new EmptyBorder(35, 35, 35, 35));
-        setContentPane(contentPane);
-        contentPane.setLayout(null);
-        contentPane.setBackground(defaultColor);
-
-        JTextField idTextField = new JTextField();
-        idTextField.setBounds(150, 25, 160, 20);
-        contentPane.add(idTextField);
-
-        JButton loginButton = new JButton();
-
-        JLabel txta3 = new JLabel();
-        txta3.setText("");
-        txta3.setBounds(10, 85, 250, 30);
-        txta3.setFont(new Font("Serif", Font.BOLD, 20));
-        txta3.setForeground(Color.GREEN);
-        contentPane.add(txta3);
-
-
-
-        JPasswordField passwordField = new JPasswordField();
-        passwordField.setBounds(150, 55, 160, 20);
-        passwordField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
-                    loginButton.doClick();
-                }
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
-        contentPane.add(passwordField);
-
-        loginButton.setBounds(15, 200, 100, 30);
+    static JFrame frame1;
+    static JFrame frame2;
+    static JFrame frame3;
+    static JButton register;
+    static JButton close;
+    static JButton back;
+    static JButton loginButton;
+    static JButton addUser;
+    static JTextField login;
+    static JPasswordField passwordField;
+    static JTextField newLogin;
+    static JPasswordField newPasswordField;
+    static JLabel info;
+    static JLabel txtLogin;
+    static JLabel txtPassword;
+    public static void main(String[] args)
+    {
+        frame1 = new JFrame("Logowanie");
+        frame1.setSize(400,300);
+        frame1.setLayout(null);
+        frame1.setResizable(false);
+        login = new JTextField();
+        register = new JButton("Rejestracja");
+        close = new JButton("Zamknij");
+        passwordField = new JPasswordField();
+        info = new JLabel();
+        txtLogin = new JLabel();
+        txtPassword = new JLabel();
+        txtLogin.setBounds(10, 25, 180, 20);
+        txtLogin.setText("Nazwa użytkownika:");
+        txtPassword.setBounds(10, 55, 180, 20);
+        txtPassword.setText("Hasło:");
+        loginButton = new JButton();
+        loginButton.setBounds(25, 150, 100, 30);
         loginButton.setText("Login");
         loginButton.addActionListener(e -> {
-            String password = users.get(idTextField.getText());
+            String password = users.get(login.getText());
             if (password != null && password.equals(new String(passwordField.getPassword()))) {
-                txta3.setText("Prawidłowy login i hasło");
-                txta3.setForeground(Color.GREEN);
-                contentPane.add(txta3);
+                info.setText("Prawidłowy login i hasło");
+                info.setForeground(Color.GREEN);
+                create_frame3();
 
-                return;
             }
-            txta3.setText("Błąd logowania");
-            txta3.setForeground(Color.RED);
-            contentPane.add(txta3);
+            else {
+                info.setText("Błędne dane logowania");
+                info.setForeground(Color.RED);
+            }});
+        login.setBounds(150, 25, 160, 20);
+        register.setBounds(150,150,100,30);
+        close.setBounds(275,150,100,30);
+        passwordField.setBounds(150, 55, 160, 20);
+        info.setBounds(10, 85, 250, 30);
+        info.setText("");
+        info.setFont(new Font("Serif", Font.BOLD, 20));
+        info.setForeground(Color.GREEN);
+        frame1.add(register);
+        frame1.add(close);
+        frame1.add(login);
+        frame1.add(passwordField);
+        frame1.add(info);
+        frame1.add(loginButton);
+        frame1.add(txtLogin);
+        frame1.add(txtPassword);
+
+        login obj=new login();
+        register.addActionListener(obj);
+        close.addActionListener(obj);
+        frame1.setVisible(true);
+    }
+    public void actionPerformed(ActionEvent e)
+    {
+        String button=e.getActionCommand();
+        if(button.equals("Rejestracja"))
+        {
+            create_frame2();
+        }
+        if(button.equals("Zamknij"))
+        {
+            frame1.dispose();
+        }
+        if(button.equals("Powrót"))
+        {
+            frame2.dispose();
+        }
+        if(button.equals("Wyloguj się"))
+        {
+            frame3.dispose();
+        }
+    }
+    public static void create_frame2()
+    {
+        frame2 = new JFrame("Rejestracja");
+        frame2.setSize(400,300);
+        frame2.setLayout(null);
+        frame2.setBackground(Color.white);
+        addUser = new JButton();
+        addUser.setText("Dodaj użytkownika");
+        addUser.setBounds(25,150,225,30);
+        addUser.addActionListener(e -> {
+            String user = newLogin.getText();
+            char[] password = newPasswordField.getPassword();
+            users.putIfAbsent(user, Arrays.toString(password));
         });
-        contentPane.add(loginButton);
-
-        JButton resetButton = new JButton();
-        resetButton.setBounds(130, 200, 100, 30);
-        resetButton.setText("Reset");
-        resetButton.addActionListener(e -> {
-            idTextField.setText("");
-            passwordField.setText("");
-            contentPane.setBackground(defaultColor);
-            txta3.setText("");
-        });
-        contentPane.add(resetButton);
-
-        JButton registerButton = new JButton();
-        registerButton.setBounds(245, 200, 100, 30);
-        registerButton.setText("Rejestracja");
-        registerButton.addActionListener(e -> contentPane.setBackground(defaultColor));
-        contentPane.add(registerButton);
-
-        JLabel txta1 = new JLabel();
-        txta1.setBounds(10, 25, 180, 20);
-        txta1.setText("Nazwa użytkownika:");
-        contentPane.add(txta1);
-
-        JLabel txta2 = new JLabel();
-        txta2.setBounds(10, 55, 180, 20);
-        txta2.setText("Hasło:");
-        contentPane.add(txta2);
-
-
+        newLogin = new JPasswordField();
+        newLogin.setBounds(150, 25, 160, 20);
+        newPasswordField = new JPasswordField();
+        newPasswordField.setBounds(150, 55, 160, 20);
+        back = new JButton("Powrót");
+        back.setBounds(275,150,100,30);
+        frame2.add(back);
+        frame2.add(txtLogin);
+        frame2.add(txtPassword);
+        frame2.add(addUser);
+        frame2.add(newLogin);
+        frame2.add(newPasswordField);
+        login obj=new login();
+        back.addActionListener(obj);
+        frame2.setVisible(true);
+    }
+    public static void create_frame3()
+    {
+        frame3 = new JFrame("Użytkownicy");
+        frame3.setSize(400,300);
+        frame3.setLayout(null);
+        frame3.setBackground(Color.white);
+        back = new JButton("Wyloguj się");
+        back.setBounds(150,10,100,30);
+        JTable tableOfUsers = new JTable(users.size(),2);
+        tableOfUsers.setBounds(25, 75, 300, users.size()*16);
+        int row=0;
+        for(Map.Entry<String, String> entry: users.entrySet()){
+            tableOfUsers.setValueAt(entry.getKey(),row,0);
+            tableOfUsers.setValueAt(entry.getValue(),row,1);
+            row++;
+        }
+        frame3.add(back);
+        frame3.add(tableOfUsers);
+        login obj=new login();
+        back.addActionListener(obj);
+        frame3.setVisible(true);
     }
 }
