@@ -28,6 +28,7 @@ class login implements ActionListener
     static JTextField newLogin;
     static JPasswordField newPasswordField;
     static JLabel info;
+    static JLabel info2;
     static JLabel txtLogin;
     static JLabel txtPassword;
     public static void main(String[] args)
@@ -68,7 +69,7 @@ class login implements ActionListener
         passwordField.setBounds(150, 55, 160, 20);
         info.setBounds(10, 85, 250, 30);
         info.setText("");
-        info.setFont(new Font("Serif", Font.BOLD, 20));
+        info.setFont(new Font("Calibri", Font.BOLD, 20));
         info.setForeground(Color.GREEN);
         frame1.add(register);
         frame1.add(close);
@@ -110,13 +111,24 @@ class login implements ActionListener
         frame2.setSize(400,300);
         frame2.setLayout(null);
         frame2.setBackground(Color.white);
+        info2 = new JLabel();
+        info2.setBounds(10, 100, 350, 30);
+        info2.setFont(new Font("Calibri", Font.BOLD, 20));
         addUser = new JButton();
         addUser.setText("Dodaj użytkownika");
         addUser.setBounds(25,150,225,30);
         addUser.addActionListener(e -> {
             String user = newLogin.getText();
-            char[] password = newPasswordField.getPassword();
-            users.putIfAbsent(user, Arrays.toString(password));
+            String password = new String(passwordField.getPassword());
+            if (users.containsKey(user)){
+                info2.setText("Użytkownik znajduje się już w bazie");
+                info2.setForeground(Color.RED);
+            }
+            else {
+                users.putIfAbsent(user, password);
+                info2.setText("Użytkownik pomyślnie dodany");
+                info2.setForeground(Color.GREEN);
+            }
         });
         newLogin = new JPasswordField();
         newLogin.setBounds(150, 25, 160, 20);
@@ -130,6 +142,7 @@ class login implements ActionListener
         frame2.add(addUser);
         frame2.add(newLogin);
         frame2.add(newPasswordField);
+        frame2.add(info2);
         login obj=new login();
         back.addActionListener(obj);
         frame2.setVisible(true);
@@ -141,7 +154,7 @@ class login implements ActionListener
         frame3.setLayout(null);
         frame3.setBackground(Color.white);
         back = new JButton("Wyloguj się");
-        back.setBounds(150,10,100,30);
+        back.setBounds(250,10,100,30);
         JTable tableOfUsers = new JTable(users.size(),2);
         tableOfUsers.setBounds(25, 75, 300, users.size()*16);
         int row=0;
